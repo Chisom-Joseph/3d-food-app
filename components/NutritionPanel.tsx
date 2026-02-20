@@ -9,12 +9,13 @@ interface NutritionPanelProps {
 
 export default function NutritionPanel({ dish }: NutritionPanelProps) {
   return (
-    <aside className="w-[240px] flex-shrink-0 flex flex-col gap-3.5 p-4 bg-[var(--color-surface)] border-l border-[var(--color-border)] overflow-y-auto transition-colors duration-300">
+    /* On mobile: full-width scrollable. On desktop: fixed-width sidebar */
+    <aside className="w-full md:w-[240px] md:flex-shrink-0 flex flex-col gap-3.5 p-4 bg-[var(--color-surface)] md:border-l border-[var(--color-border)] overflow-y-auto transition-colors duration-300">
       {/* Calories */}
       <div className="text-center">
         <p className="text-[9px] font-bold tracking-[0.15em] text-[var(--color-text-3)] mb-1">TOTAL CALORIES</p>
         <div className="flex items-start justify-center gap-1">
-          <span className="text-[52px] font-bold text-[var(--color-text)] leading-none">{dish.calories}</span>
+          <span className="text-[48px] md:text-[52px] font-bold text-[var(--color-text)] leading-none">{dish.calories}</span>
           <span className="text-[12px] font-bold text-[#f48c25] mt-1.5 tracking-widest">KCAL</span>
         </div>
       </div>
@@ -45,7 +46,7 @@ export default function NutritionPanel({ dish }: NutritionPanelProps) {
       {/* Ingredients header */}
       <div className="flex items-center justify-between">
         <p className="text-[9px] font-bold tracking-[0.12em] text-[var(--color-text-3)]">INGREDIENTS</p>
-        <button className="text-[10px] text-[#f48c25] font-semibold bg-none border-none cursor-pointer hover:opacity-70 transition-opacity">View All</button>
+        <button className="text-[10px] text-[#f48c25] font-semibold cursor-pointer hover:opacity-70 transition-opacity">View All</button>
       </div>
 
       <div className="flex flex-col gap-2.5">
@@ -66,7 +67,7 @@ export default function NutritionPanel({ dish }: NutritionPanelProps) {
       <div className="w-full h-px bg-[var(--color-border)]" />
 
       {/* CTAs */}
-      <div className="flex flex-col gap-2 mt-auto">
+      <div className="flex flex-col gap-2 pb-2">
         <button className="w-full flex items-center justify-center gap-2 px-3 py-[11px] text-[11px] font-semibold tracking-widest uppercase text-black bg-gradient-to-br from-[#f48c25] to-[#e07010] rounded-lg hover:from-[#ff9d3a] hover:to-[#f48c25] hover:shadow-[0_4px_24px_rgba(244,140,37,0.25)] hover:-translate-y-px transition-all">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

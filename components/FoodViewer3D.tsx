@@ -48,10 +48,6 @@ function DishMesh({ dish, exploded, autoSpin }: { dish: FoodItem; exploded: bool
         <torusGeometry args={[1.6, 0.05, 8, 80]} />
         <meshStandardMaterial color={glowColor} emissive={glowColor} emissiveIntensity={2.5} transparent opacity={0.9} />
       </mesh>
-      <mesh position={[0, -1.65, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.9, 0.02, 8, 80]} />
-        <meshStandardMaterial color={glowColor} emissive={glowColor} emissiveIntensity={1.5} transparent opacity={0.4} />
-      </mesh>
       <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
         <mesh ref={meshRef} castShadow position={[0, exploded ? 0.4 : 0, 0]}>
           {shapeGeometry()}
@@ -88,20 +84,22 @@ function SceneLights({ dish }: { dish: FoodItem }) {
   );
 }
 
-function CtrlBtn({ onClick, active, children, title }: {
-  onClick?: () => void; active?: boolean; children: React.ReactNode; title?: string;
+/* Icon-only on mobile, icon+label on desktop */
+function CtrlBtn({ onClick, active, children, label, title }: {
+  onClick?: () => void; active?: boolean; children: React.ReactNode; label?: string; title?: string;
 }) {
   return (
     <button
       onClick={onClick}
-      title={title}
-      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold tracking-wide border transition-all cursor-pointer ${
+      title={title ?? label}
+      className={`flex items-center gap-1 md:gap-1.5 px-2 md:px-2.5 py-1.5 rounded-lg text-[11px] font-semibold tracking-wide border transition-all cursor-pointer ${
         active
           ? 'border-[#f48c25] text-[#f48c25] bg-[rgba(244,140,37,0.15)]'
           : 'border-[var(--color-border)] text-[var(--color-text-2)] bg-[var(--color-surface-2)] hover:border-[#f48c25] hover:text-[#f48c25] hover:bg-[rgba(244,140,37,0.08)]'
       }`}
     >
       {children}
+      {label && <span className="hidden md:inline">{label}</span>}
     </button>
   );
 }
@@ -125,7 +123,7 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
 
   return (
     <div className="flex-1 flex flex-col min-w-0">
-      {/* Canvas — always dark (WebGL scene) */}
+      {/* Canvas — always dark */}
       <div className="flex-1 relative overflow-hidden bg-[#0a0a0a]">
         <Canvas
           camera={{ position: [0, 0, 5], fov: 45 }}
@@ -145,69 +143,66 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
         {/* Annotations */}
         {showAnnotations && (
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute flex items-center gap-1.5" style={{ top: '28%', left: '6%' }}>
+            <div className="absolute flex items-center gap-1.5" style={{ top: '28%', left: '4%' }}>
               <div className="w-2 h-2 rounded-full bg-[#f48c25] flex-shrink-0 pulse-glow" />
-              <div className="w-8 h-px bg-gradient-to-r from-[#f48c25] to-transparent" />
-              <div className="bg-[rgba(10,10,10,0.88)] backdrop-blur-sm border border-[rgba(244,140,37,0.4)] rounded-md px-2.5 py-1.5">
-                <p className="text-[10px] font-bold text-[#f48c25] mb-0.5">{dish.ingredients[0]?.name}</p>
-                <p className="text-[9px] text-[#888]">{dish.ingredients[0]?.subtitle}</p>
+              <div className="w-6 h-px bg-gradient-to-r from-[#f48c25] to-transparent" />
+              <div className="bg-[rgba(10,10,10,0.88)] backdrop-blur-sm border border-[rgba(244,140,37,0.4)] rounded-md px-2 py-1.5">
+                <p className="text-[9px] md:text-[10px] font-bold text-[#f48c25] mb-0.5">{dish.ingredients[0]?.name}</p>
+                <p className="text-[8px] md:text-[9px] text-[#888] hidden sm:block">{dish.ingredients[0]?.subtitle}</p>
               </div>
             </div>
-            <div className="absolute flex flex-row-reverse items-center gap-1.5" style={{ top: '55%', right: '6%' }}>
+            <div className="absolute flex flex-row-reverse items-center gap-1.5" style={{ top: '55%', right: '4%' }}>
               <div className="w-2 h-2 rounded-full bg-[#f48c25] flex-shrink-0 pulse-glow" />
-              <div className="w-8 h-px bg-gradient-to-l from-[#f48c25] to-transparent" />
-              <div className="bg-[rgba(10,10,10,0.88)] backdrop-blur-sm border border-[rgba(244,140,37,0.4)] rounded-md px-2.5 py-1.5">
-                <p className="text-[10px] font-bold text-[#f48c25] mb-0.5">{dish.ingredients[1]?.name}</p>
-                <p className="text-[9px] text-[#888]">{dish.ingredients[1]?.subtitle}</p>
+              <div className="w-6 h-px bg-gradient-to-l from-[#f48c25] to-transparent" />
+              <div className="bg-[rgba(10,10,10,0.88)] backdrop-blur-sm border border-[rgba(244,140,37,0.4)] rounded-md px-2 py-1.5">
+                <p className="text-[9px] md:text-[10px] font-bold text-[#f48c25] mb-0.5">{dish.ingredients[1]?.name}</p>
+                <p className="text-[8px] md:text-[9px] text-[#888] hidden sm:block">{dish.ingredients[1]?.subtitle}</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Active ingredient popup */}
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-[rgba(10,10,10,0.88)] backdrop-blur-xl border border-[rgba(244,140,37,0.4)] rounded-lg px-4 py-3 max-w-[280px] w-[calc(100%-48px)] text-center">
-          <span className="text-[9px] font-bold tracking-[0.12em] text-[#f48c25] block mb-1">ACTIVE INGREDIENT</span>
-          <h3 className="text-[13px] font-bold text-white mb-1">{dish.activeIngredient.name}</h3>
-          <p className="text-[11px] text-[#aaa] leading-relaxed">{dish.activeIngredient.description}</p>
+        <div className="absolute bottom-16 md:bottom-20 left-1/2 -translate-x-1/2 bg-[rgba(10,10,10,0.88)] backdrop-blur-xl border border-[rgba(244,140,37,0.4)] rounded-lg px-3 md:px-4 py-2 md:py-3 max-w-[260px] md:max-w-[280px] w-[calc(100%-32px)] text-center">
+          <span className="text-[8px] md:text-[9px] font-bold tracking-[0.12em] text-[#f48c25] block mb-0.5">ACTIVE INGREDIENT</span>
+          <h3 className="text-[12px] md:text-[13px] font-bold text-white mb-0.5 md:mb-1">{dish.activeIngredient.name}</h3>
+          <p className="text-[10px] md:text-[11px] text-[#aaa] leading-relaxed hidden sm:block">{dish.activeIngredient.description}</p>
         </div>
       </div>
 
-      {/* Controls strip — themed */}
-      <div className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface)] border-t border-[var(--color-border)] flex-shrink-0 gap-2 transition-colors duration-300">
-        <div className="flex items-center gap-1.5">
+      {/* Controls strip */}
+      <div className="flex items-center justify-between px-2 md:px-4 py-1.5 md:py-2 bg-[var(--color-surface)] border-t border-[var(--color-border)] flex-shrink-0 gap-1 md:gap-2 flex-wrap transition-colors duration-300">
+        <div className="flex items-center gap-1 md:gap-1.5 flex-wrap">
           <CtrlBtn title="Zoom In">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
           </CtrlBtn>
           <CtrlBtn title="Zoom Out">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/><path d="M21 21l-4.35-4.35M8 11h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
           </CtrlBtn>
-          <CtrlBtn onClick={() => setAutoSpin(s => !s)} active={autoSpin}>
+          <CtrlBtn onClick={() => setAutoSpin(s => !s)} active={autoSpin} label="AUTO SPIN">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ animation: autoSpin ? 'spin 1.2s linear infinite' : 'none' }}>
               <path d="M21 12a9 9 0 11-6.219-8.56" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               <path d="M21 3v9h-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <span>AUTO SPIN</span>
           </CtrlBtn>
-          <CtrlBtn onClick={() => setExploded(e => !e)} active={exploded}>
+          <CtrlBtn onClick={() => setExploded(e => !e)} active={exploded} label="EXPLODE">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
               <path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M19.07 4.93l-4.24 4.24M9.17 14.83l-4.24 4.24" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
-            <span>EXPLODE</span>
           </CtrlBtn>
-          <CtrlBtn title="Reset">
+          <CtrlBtn title="Reset view">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
               <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               <path d="M3 3v5h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </CtrlBtn>
         </div>
-        <div className="flex items-center gap-1.5">
-          <CtrlBtn onClick={onToggleAnnotations}>
+        <div className="flex items-center gap-1 md:gap-1.5">
+          <CtrlBtn onClick={onToggleAnnotations} label="ANNOTATIONS">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
               <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
-            TOGGLE ANNOTATIONS
           </CtrlBtn>
           <CtrlBtn title="Fullscreen">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
@@ -217,8 +212,8 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
         </div>
       </div>
 
-      {/* Footer metadata — themed */}
-      <div className="flex items-center gap-4 px-4 py-1.5 bg-[var(--color-bg-2)] border-t border-[var(--color-border)] text-[10px] text-[var(--color-text-3)] tracking-wide flex-shrink-0 transition-colors duration-300">
+      {/* Footer metadata — hidden on mobile */}
+      <div className="hidden md:flex items-center gap-4 px-4 py-1.5 bg-[var(--color-bg-2)] border-t border-[var(--color-border)] text-[10px] text-[var(--color-text-3)] tracking-wide flex-shrink-0 transition-colors duration-300">
         <span>⬡ Engine: WebGL 2.0 RENDERING</span>
         <span>Poly Count: 42.4k</span>
         <span>Texture: 4K PBR</span>
