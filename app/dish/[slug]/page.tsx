@@ -54,8 +54,8 @@ export default function DishPage({ params }: Props) {
           </div>
 
           {/* 3D viewer — fixed height on mobile, flex on desktop */}
-          <div className="h-[280px] sm:h-[340px] md:h-auto md:flex-1 md:min-h-0 flex flex-col">
-            <FoodViewer3D dish={dish} showAnnotations={true} onToggleAnnotations={() => {}} />
+          <div className="h-[280px] sm:h-[340px] md:h-[400px] lg:flex-1 md:min-h-0 flex flex-col relative">
+            <FoodViewer3D dish={dish} showAnnotations={true} onToggleAnnotations={() => {}} compactMode={true} />
           </div>
         </div>
 

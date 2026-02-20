@@ -10,6 +10,7 @@ interface FoodViewer3DProps {
   dish: FoodItem;
   showAnnotations: boolean;
   onToggleAnnotations: () => void;
+  compactMode?: boolean;
 }
 
 /* Syncs the renderer clear color when the theme changes */
@@ -122,7 +123,7 @@ function CtrlBtn({ onClick, active, children, label, title }: {
   );
 }
 
-export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotations }: FoodViewer3DProps) {
+export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotations, compactMode = false }: FoodViewer3DProps) {
   const [exploded, setExploded] = useState(false);
   const [autoSpin, setAutoSpin] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -202,19 +203,21 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
           </div>
         )}
 
-        {/* Active ingredient popup */}
-        <div
-          className="absolute bottom-16 md:bottom-20 left-1/2 -translate-x-1/2 backdrop-blur-xl rounded-lg px-3 md:px-4 py-2 md:py-3 max-w-[260px] md:max-w-[280px] w-[calc(100%-32px)] text-center border transition-colors duration-300"
-          style={{ background: annotBg, borderColor: annotBorder }}
-        >
-          <span className="text-[8px] md:text-[9px] font-bold tracking-[0.12em] text-[#f48c25] block mb-0.5">ACTIVE INGREDIENT</span>
-          <h3 className="text-[12px] md:text-[13px] font-bold mb-0.5 md:mb-1 transition-colors duration-300" style={{ color: annotTitle }}>
-            {dish.activeIngredient.name}
-          </h3>
-          <p className="text-[10px] md:text-[11px] leading-relaxed hidden sm:block transition-colors duration-300" style={{ color: annotText }}>
-            {dish.activeIngredient.description}
-          </p>
-        </div>
+        {/* Active ingredient popup - hide in compact mode or when annotations are toggled off */}
+        {!compactMode && showAnnotations && (
+          <div
+            className="absolute bottom-16 md:bottom-20 left-1/2 -translate-x-1/2 backdrop-blur-xl rounded-lg px-3 md:px-4 py-2 md:py-3 max-w-[260px] md:max-w-[280px] w-[calc(100%-32px)] text-center border transition-colors duration-300 pointer-events-none"
+            style={{ background: annotBg, borderColor: annotBorder }}
+          >
+            <span className="text-[8px] md:text-[9px] font-bold tracking-[0.12em] text-[#f48c25] block mb-0.5">ACTIVE INGREDIENT</span>
+            <h3 className="text-[12px] md:text-[13px] font-bold mb-0.5 md:mb-1 transition-colors duration-300" style={{ color: annotTitle }}>
+              {dish.activeIngredient.name}
+            </h3>
+            <p className="text-[10px] md:text-[11px] leading-relaxed hidden sm:block transition-colors duration-300" style={{ color: annotText }}>
+              {dish.activeIngredient.description}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Controls strip */}
