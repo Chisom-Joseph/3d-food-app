@@ -23,7 +23,7 @@ export default function Home() {
   const dish = getFoodBySlug(selectedSlug) || foodItems[0];
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className="flex flex-col h-screen overflow-hidden bg-[var(--color-bg)] transition-colors duration-300">
       <Navbar variant="main" />
       <div className="flex flex-1 overflow-hidden min-h-0">
         <MenuGallery
@@ -34,7 +34,7 @@ export default function Home() {
         <FoodViewer3D
           dish={dish}
           showAnnotations={showAnnotations}
-          onToggleAnnotations={() => setShowAnnotations((v) => !v)}
+          onToggleAnnotations={() => setShowAnnotations(v => !v)}
         />
         <NutritionPanel dish={dish} />
       </div>

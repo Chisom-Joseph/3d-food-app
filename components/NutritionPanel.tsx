@@ -9,17 +9,17 @@ interface NutritionPanelProps {
 
 export default function NutritionPanel({ dish }: NutritionPanelProps) {
   return (
-    <aside className="w-[240px] flex-shrink-0 flex flex-col gap-3.5 p-4 bg-[#141414] border-l border-white/[0.07] overflow-y-auto">
+    <aside className="w-[240px] flex-shrink-0 flex flex-col gap-3.5 p-4 bg-[var(--color-surface)] border-l border-[var(--color-border)] overflow-y-auto transition-colors duration-300">
       {/* Calories */}
       <div className="text-center">
-        <p className="text-[9px] font-bold tracking-[0.15em] text-[#666] mb-1">TOTAL CALORIES</p>
+        <p className="text-[9px] font-bold tracking-[0.15em] text-[var(--color-text-3)] mb-1">TOTAL CALORIES</p>
         <div className="flex items-start justify-center gap-1">
-          <span className="text-[52px] font-bold text-[#f0f0f0] leading-none">{dish.calories}</span>
+          <span className="text-[52px] font-bold text-[var(--color-text)] leading-none">{dish.calories}</span>
           <span className="text-[12px] font-bold text-[#f48c25] mt-1.5 tracking-widest">KCAL</span>
         </div>
       </div>
 
-      <div className="w-full h-px bg-white/[0.07]" />
+      <div className="w-full h-px bg-[var(--color-border)]" />
 
       {/* Macro circles */}
       <div className="flex justify-around items-center">
@@ -34,36 +34,36 @@ export default function NutritionPanel({ dish }: NutritionPanelProps) {
           { g: dish.macros.fats.g,    label: 'FATS' },
         ].map((m) => (
           <div key={m.label}>
-            <p className="text-[13px] font-bold text-[#f0f0f0]">{m.g}g</p>
-            <p className="text-[9px] font-semibold tracking-widest text-[#666]">{m.label}</p>
+            <p className="text-[13px] font-bold text-[var(--color-text)]">{m.g}g</p>
+            <p className="text-[9px] font-semibold tracking-widest text-[var(--color-text-3)]">{m.label}</p>
           </div>
         ))}
       </div>
 
-      <div className="w-full h-px bg-white/[0.07]" />
+      <div className="w-full h-px bg-[var(--color-border)]" />
 
-      {/* Ingredients */}
+      {/* Ingredients header */}
       <div className="flex items-center justify-between">
-        <p className="text-[9px] font-bold tracking-[0.12em] text-[#666]">INGREDIENTS</p>
+        <p className="text-[9px] font-bold tracking-[0.12em] text-[var(--color-text-3)]">INGREDIENTS</p>
         <button className="text-[10px] text-[#f48c25] font-semibold bg-none border-none cursor-pointer hover:opacity-70 transition-opacity">View All</button>
       </div>
 
       <div className="flex flex-col gap-2.5">
         {dish.ingredients.slice(0, 3).map((ing, i) => (
           <div key={i} className="flex items-center gap-2.5">
-            <span className="w-8 h-8 flex items-center justify-center bg-[#1a1a1a] border border-white/[0.07] rounded-lg flex-shrink-0 text-lg">
+            <span className="w-8 h-8 flex items-center justify-center bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-lg flex-shrink-0 text-lg">
               {ing.icon}
             </span>
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-semibold text-[#f0f0f0] truncate">{ing.name}</p>
-              <p className="text-[9px] text-[#666] truncate">{ing.subtitle}</p>
+              <p className="text-[11px] font-semibold text-[var(--color-text)] truncate">{ing.name}</p>
+              <p className="text-[9px] text-[var(--color-text-3)] truncate">{ing.subtitle}</p>
             </div>
             <span className="text-[10px] font-bold text-[#f48c25] flex-shrink-0">{ing.weight}</span>
           </div>
         ))}
       </div>
 
-      <div className="w-full h-px bg-white/[0.07]" />
+      <div className="w-full h-px bg-[var(--color-border)]" />
 
       {/* CTAs */}
       <div className="flex flex-col gap-2 mt-auto">
@@ -76,7 +76,7 @@ export default function NutritionPanel({ dish }: NutritionPanelProps) {
         </button>
         <Link
           href={`/dish/${dish.slug}`}
-          className="w-full flex items-center justify-center gap-2 px-3 py-[11px] text-[11px] font-semibold tracking-widest uppercase text-[#aaa] bg-transparent border border-white/[0.07] rounded-lg hover:border-[#f48c25] hover:text-[#f48c25] hover:bg-[rgba(244,140,37,0.08)] transition-all"
+          className="w-full flex items-center justify-center gap-2 px-3 py-[11px] text-[11px] font-semibold tracking-widest uppercase text-[var(--color-text-2)] bg-transparent border border-[var(--color-border)] rounded-lg hover:border-[#f48c25] hover:text-[#f48c25] hover:bg-[rgba(244,140,37,0.08)] transition-all"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <circle cx="18" cy="5" r="3" stroke="currentColor" strokeWidth="2"/>

@@ -88,15 +88,17 @@ function SceneLights({ dish }: { dish: FoodItem }) {
   );
 }
 
-/* Small control button */
-function CtrlBtn({ onClick, active, children }: { onClick?: () => void; active?: boolean; children: React.ReactNode }) {
+function CtrlBtn({ onClick, active, children, title }: {
+  onClick?: () => void; active?: boolean; children: React.ReactNode; title?: string;
+}) {
   return (
     <button
       onClick={onClick}
+      title={title}
       className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold tracking-wide border transition-all cursor-pointer ${
         active
           ? 'border-[#f48c25] text-[#f48c25] bg-[rgba(244,140,37,0.15)]'
-          : 'border-white/[0.07] text-[#aaa] bg-[#1a1a1a] hover:border-[#f48c25] hover:text-[#f48c25] hover:bg-[rgba(244,140,37,0.08)]'
+          : 'border-[var(--color-border)] text-[var(--color-text-2)] bg-[var(--color-surface-2)] hover:border-[#f48c25] hover:text-[#f48c25] hover:bg-[rgba(244,140,37,0.08)]'
       }`}
     >
       {children}
@@ -122,9 +124,9 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
   }
 
   return (
-    <div className="flex-1 flex flex-col min-w-0 bg-[#0a0a0a]">
-      {/* Canvas area */}
-      <div className="flex-1 relative overflow-hidden">
+    <div className="flex-1 flex flex-col min-w-0">
+      {/* Canvas — always dark (WebGL scene) */}
+      <div className="flex-1 relative overflow-hidden bg-[#0a0a0a]">
         <Canvas
           camera={{ position: [0, 0, 5], fov: 45 }}
           shadows
@@ -143,22 +145,20 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
         {/* Annotations */}
         {showAnnotations && (
           <div className="absolute inset-0 pointer-events-none">
-            {/* Left annotation */}
             <div className="absolute flex items-center gap-1.5" style={{ top: '28%', left: '6%' }}>
-              <div className="w-2 h-2 rounded-full bg-[#f48c25] shadow-[0_0_12px_rgba(244,140,37,0.8)] flex-shrink-0 pulse-glow" />
+              <div className="w-2 h-2 rounded-full bg-[#f48c25] flex-shrink-0 pulse-glow" />
               <div className="w-8 h-px bg-gradient-to-r from-[#f48c25] to-transparent" />
-              <div className="bg-[rgba(14,14,14,0.85)] backdrop-blur-sm border border-[rgba(244,140,37,0.4)] rounded-md px-2.5 py-1.5">
+              <div className="bg-[rgba(10,10,10,0.88)] backdrop-blur-sm border border-[rgba(244,140,37,0.4)] rounded-md px-2.5 py-1.5">
                 <p className="text-[10px] font-bold text-[#f48c25] mb-0.5">{dish.ingredients[0]?.name}</p>
-                <p className="text-[9px] text-[#666]">{dish.ingredients[0]?.subtitle}</p>
+                <p className="text-[9px] text-[#888]">{dish.ingredients[0]?.subtitle}</p>
               </div>
             </div>
-            {/* Right annotation */}
             <div className="absolute flex flex-row-reverse items-center gap-1.5" style={{ top: '55%', right: '6%' }}>
-              <div className="w-2 h-2 rounded-full bg-[#f48c25] shadow-[0_0_12px_rgba(244,140,37,0.8)] flex-shrink-0 pulse-glow" />
+              <div className="w-2 h-2 rounded-full bg-[#f48c25] flex-shrink-0 pulse-glow" />
               <div className="w-8 h-px bg-gradient-to-l from-[#f48c25] to-transparent" />
-              <div className="bg-[rgba(14,14,14,0.85)] backdrop-blur-sm border border-[rgba(244,140,37,0.4)] rounded-md px-2.5 py-1.5">
+              <div className="bg-[rgba(10,10,10,0.88)] backdrop-blur-sm border border-[rgba(244,140,37,0.4)] rounded-md px-2.5 py-1.5">
                 <p className="text-[10px] font-bold text-[#f48c25] mb-0.5">{dish.ingredients[1]?.name}</p>
-                <p className="text-[9px] text-[#666]">{dish.ingredients[1]?.subtitle}</p>
+                <p className="text-[9px] text-[#888]">{dish.ingredients[1]?.subtitle}</p>
               </div>
             </div>
           </div>
@@ -167,13 +167,13 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
         {/* Active ingredient popup */}
         <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-[rgba(10,10,10,0.88)] backdrop-blur-xl border border-[rgba(244,140,37,0.4)] rounded-lg px-4 py-3 max-w-[280px] w-[calc(100%-48px)] text-center">
           <span className="text-[9px] font-bold tracking-[0.12em] text-[#f48c25] block mb-1">ACTIVE INGREDIENT</span>
-          <h3 className="text-[13px] font-bold text-[#f0f0f0] mb-1">{dish.activeIngredient.name}</h3>
+          <h3 className="text-[13px] font-bold text-white mb-1">{dish.activeIngredient.name}</h3>
           <p className="text-[11px] text-[#aaa] leading-relaxed">{dish.activeIngredient.description}</p>
         </div>
       </div>
 
-      {/* Controls strip */}
-      <div className="flex items-center justify-between px-4 py-2 bg-[#141414] border-t border-white/[0.07] flex-shrink-0 gap-2">
+      {/* Controls strip — themed */}
+      <div className="flex items-center justify-between px-4 py-2 bg-[var(--color-surface)] border-t border-[var(--color-border)] flex-shrink-0 gap-2 transition-colors duration-300">
         <div className="flex items-center gap-1.5">
           <CtrlBtn title="Zoom In">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
@@ -194,7 +194,7 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
             </svg>
             <span>EXPLODE</span>
           </CtrlBtn>
-          <CtrlBtn>
+          <CtrlBtn title="Reset">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
               <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               <path d="M3 3v5h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
@@ -209,7 +209,7 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
             </svg>
             TOGGLE ANNOTATIONS
           </CtrlBtn>
-          <CtrlBtn>
+          <CtrlBtn title="Fullscreen">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
               <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
@@ -217,8 +217,8 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
         </div>
       </div>
 
-      {/* Footer metadata */}
-      <div className="flex items-center gap-4 px-4 py-1.5 bg-[#0f0f0f] border-t border-white/[0.07] text-[10px] text-[#666] tracking-wide flex-shrink-0">
+      {/* Footer metadata — themed */}
+      <div className="flex items-center gap-4 px-4 py-1.5 bg-[var(--color-bg-2)] border-t border-[var(--color-border)] text-[10px] text-[var(--color-text-3)] tracking-wide flex-shrink-0 transition-colors duration-300">
         <span>⬡ Engine: WebGL 2.0 RENDERING</span>
         <span>Poly Count: 42.4k</span>
         <span>Texture: 4K PBR</span>
