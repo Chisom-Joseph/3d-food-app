@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import { FoodItem } from '@/lib/foodData';
-import styles from './MenuGallery.module.css';
 
 interface MenuGalleryProps {
   items: FoodItem[];
@@ -15,31 +14,51 @@ const StarIcon = () => (
   </svg>
 );
 
+const emojiMap: Record<string, string> = {
+  torus: '🍣', sphere: '🍔', icosahedron: '🥗', cylinder: '🥣', octahedron: '🐟',
+};
+
 export default function MenuGallery({ items, selectedSlug, onSelect }: MenuGalleryProps) {
   return (
-    <aside className={styles.gallery}>
-      <div className={styles.header}>
-        <p className={styles.label}>MENU GALLERY</p>
-        <p className={styles.sublabel}>Select a dish to explore</p>
+    <aside className="w-[220px] flex-shrink-0 flex flex-col bg-[#141414] border-r border-white/[0.07] overflow-y-auto overflow-x-hidden">
+      {/* Header */}
+      <div className="px-4 pt-4 pb-2">
+        <p className="text-[10px] font-bold tracking-[0.12em] text-[#666]">MENU GALLERY</p>
+        <p className="text-[11px] text-[#666] mt-0.5">Select a dish to explore</p>
       </div>
 
-      <div className={styles.list}>
+      {/* List */}
+      <div className="flex flex-col gap-2 p-2 flex-1">
         {items.map((item) => {
           const isSelected = item.slug === selectedSlug;
           return (
             <button
               key={item.slug}
-              className={`${styles.card} ${isSelected ? styles.selected : ''}`}
               onClick={() => onSelect(item.slug)}
+              className={`relative flex flex-col gap-2 p-3 rounded-lg text-left overflow-hidden transition-all cursor-pointer border ${
+                isSelected
+                  ? 'border-[#f48c25] bg-[rgba(244,140,37,0.06)]'
+                  : 'border-white/[0.07] bg-[#1a1a1a] hover:border-[rgba(244,140,37,0.3)] hover:bg-[#222]'
+              }`}
             >
-              {isSelected && <span className={styles.badge}>{item.tag}</span>}
+              {isSelected && (
+                <span className="absolute top-2 right-2 text-[8px] font-black tracking-widest text-black bg-[#f48c25] rounded px-1.5 py-0.5">
+                  {item.tag}
+                </span>
+              )}
               {/* Food illustration */}
-              <div className={styles.imgWrap} style={{ background: `radial-gradient(circle at 40% 40%, ${item.glowColor}22, ${item.color}11)` }}>
-                <FoodEmoji shape={item.shape} color={item.glowColor} />
+              <div
+                className="w-full h-[90px] rounded-md flex items-center justify-center transition-transform duration-300 hover:scale-105"
+                style={{ background: `radial-gradient(circle at 40% 40%, ${item.glowColor}22, ${item.color}11)` }}
+              >
+                <span style={{ fontSize: 48, filter: `drop-shadow(0 0 12px ${item.glowColor}88)` }}>
+                  {emojiMap[item.shape] || '🍽️'}
+                </span>
               </div>
-              <div className={styles.info}>
-                <p className={styles.name}>{item.name}</p>
-                <div className={styles.rating}>
+              {/* Info row */}
+              <div className="flex items-center justify-between">
+                <p className="text-[12px] font-semibold text-[#f0f0f0]">{item.name}</p>
+                <div className="flex items-center gap-1 text-[10px] font-semibold text-[#f48c25]">
                   <StarIcon />
                   <span>{item.rating}</span>
                 </div>
@@ -49,7 +68,7 @@ export default function MenuGallery({ items, selectedSlug, onSelect }: MenuGalle
         })}
 
         {/* Filter button */}
-        <button className={styles.filterBtn}>
+        <button className="flex items-center justify-center gap-1.5 w-full py-2 bg-[#1a1a1a] border border-white/[0.07] rounded-lg text-[#666] text-[10px] font-bold tracking-widest cursor-pointer hover:border-[#f48c25] hover:text-[#f48c25] transition-all">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -57,23 +76,10 @@ export default function MenuGallery({ items, selectedSlug, onSelect }: MenuGalle
         </button>
       </div>
 
-      {/* View all link */}
-      <Link href="#" className={styles.viewAll}>View all dishes →</Link>
+      {/* View all */}
+      <Link href="#" className="block text-center py-3 text-[11px] text-[#f48c25] font-medium border-t border-white/[0.07] hover:opacity-70 transition-opacity">
+        View all dishes →
+      </Link>
     </aside>
-  );
-}
-
-function FoodEmoji({ shape, color }: { shape: string; color: string }) {
-  const emojiMap: Record<string, string> = {
-    torus: '🍣',
-    sphere: '🍔',
-    icosahedron: '🥗',
-    cylinder: '🥣',
-    octahedron: '🐟',
-  };
-  return (
-    <span style={{ fontSize: 48, filter: `drop-shadow(0 0 12px ${color}88)` }}>
-      {emojiMap[shape] || '🍽️'}
-    </span>
   );
 }

@@ -8,16 +8,13 @@ import Navbar from '@/components/Navbar';
 import MacroCircle from '@/components/MacroCircle';
 import VitaminBars from '@/components/VitaminBars';
 import RelatedCarousel from '@/components/RelatedCarousel';
-import styles from './page.module.css';
 
 const FoodViewer3D = dynamic(() => import('@/components/FoodViewer3D'), {
   ssr: false,
   loading: () => (
-    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)' }}>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 64, animation: 'float 2s ease infinite' }}>✨</div>
-        <p style={{ color: 'var(--accent)', fontSize: 13, letterSpacing: '0.1em', fontWeight: 600, marginTop: 16 }}>LOADING 3D ENGINE...</p>
-      </div>
+    <div className="flex-1 flex flex-col items-center justify-center gap-4 bg-[#0a0a0a]">
+      <div className="text-[64px] animate-float">✨</div>
+      <p className="text-[13px] font-bold tracking-[0.15em] text-[#f48c25] mt-4">LOADING 3D ENGINE...</p>
     </div>
   ),
 });
@@ -32,38 +29,39 @@ export default function DishPage({ params }: Props) {
   if (!dish) notFound();
 
   return (
-    <div className={styles.root}>
+    <div className="flex flex-col h-screen overflow-hidden">
       <Navbar variant="detail" />
 
-      <div className={styles.body}>
-        {/* Left: 3D viewer + title */}
-        <div className={styles.left}>
-          <div className={styles.titleArea}>
-            <span className="badge badge-accent">{dish.tag}</span>
-            <h1 className={styles.dishName}>
-              <span className={styles.dishNameLight}>{dish.name.split(' ')[0]} </span>
-              <span className={styles.dishNameAccent}>{dish.name.split(' ').slice(1).join(' ').toUpperCase()}</span>
+      <div className="flex flex-1 min-h-0 overflow-hidden">
+        {/* Left: viewer + title */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          {/* Title area */}
+          <div className="px-6 pt-5 pb-3 flex flex-col gap-2 flex-shrink-0">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[8px] font-extrabold tracking-widest text-black bg-[#f48c25] w-fit">
+              {dish.tag}
+            </span>
+            <h1 className="text-[32px] font-extrabold leading-tight tracking-tight">
+              <span className="text-[#f0f0f0] italic">{dish.name.split(' ')[0]} </span>
+              <span className="text-[#f48c25] block uppercase">{dish.name.split(' ').slice(1).join(' ')}</span>
             </h1>
-            <div className={styles.meta}>
+            <div className="flex gap-4 text-[12px] text-[#aaa] font-medium">
               <span>🔥 {dish.calories} kcal</span>
               <span>⏱ {dish.prepTime}</span>
             </div>
           </div>
 
-          <div className={styles.viewerWrap}>
-            <FoodViewer3D
-              dish={dish}
-              showAnnotations={true}
-              onToggleAnnotations={() => {}}
-            />
+          {/* 3D viewer */}
+          <div className="flex-1 min-h-0 flex flex-col">
+            <FoodViewer3D dish={dish} showAnnotations={true} onToggleAnnotations={() => {}} />
           </div>
         </div>
 
-        {/* Right: Nutritional data panel */}
-        <aside className={styles.right}>
-          <div className={styles.panelHeader}>
-            <h2 className={styles.panelTitle}>Nutritional Data</h2>
-            <button className={styles.downloadBtn}>
+        {/* Right: Nutritional panel */}
+        <aside className="w-[280px] flex-shrink-0 bg-[#141414] border-l border-white/[0.07] px-4 py-4 overflow-y-auto flex flex-col gap-3.5">
+          {/* Panel header */}
+          <div className="flex items-center justify-between">
+            <h2 className="text-[15px] font-bold text-[#f0f0f0]">Nutritional Data</h2>
+            <button className="flex items-center gap-1 text-[9px] font-bold tracking-widest text-[#f48c25] bg-none border-none cursor-pointer hover:opacity-70 transition-opacity">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -71,51 +69,51 @@ export default function DishPage({ params }: Props) {
             </button>
           </div>
 
-          {/* Macro circles large */}
-          <div className={styles.macroRow}>
+          {/* Large macro circles */}
+          <div className="flex justify-around items-center">
             {[
               { label: 'PROTEIN', g: dish.macros.protein.g, pct: dish.macros.protein.pct, color: '#f48c25' },
-              { label: 'CARBS', g: dish.macros.carbs.g, pct: dish.macros.carbs.pct, color: '#4da6ff' },
-              { label: 'FATS', g: dish.macros.fats.g, pct: dish.macros.fats.pct, color: '#51cf66' },
+              { label: 'CARBS',   g: dish.macros.carbs.g,   pct: dish.macros.carbs.pct,   color: '#4da6ff' },
+              { label: 'FATS',    g: dish.macros.fats.g,    pct: dish.macros.fats.pct,    color: '#51cf66' },
             ].map((m) => (
-              <div key={m.label} className={styles.macroItem}>
+              <div key={m.label} className="flex flex-col items-center gap-1">
                 <MacroCircle label={m.label} value={m.g} pct={m.pct} color={m.color} size={80} />
-                <p className={styles.macroG}>{m.g}g</p>
-                <p className={styles.macroL}>{m.label}</p>
+                <p className="text-[13px] font-bold text-[#f0f0f0]">{m.g}g</p>
+                <p className="text-[9px] font-bold tracking-widest text-[#666]">{m.label}</p>
               </div>
             ))}
           </div>
 
-          <div className={styles.divider} />
+          <div className="w-full h-px bg-white/[0.07]" />
 
           {/* Vitamins */}
           <VitaminBars vitamins={dish.vitamins} />
 
-          <div className={styles.divider} />
+          <div className="w-full h-px bg-white/[0.07]" />
 
           {/* Ingredient anatomy */}
           <div>
-            <div className={styles.anatomyHeader}>
-              <span className={styles.anatomyIcon}>🍽️</span>
-              <h3 className={styles.anatomyTitle}>Ingredients Anatomy</h3>
+            <div className="flex items-center gap-2 mb-2.5">
+              <span className="text-[14px]">🍽️</span>
+              <h3 className="text-[12px] font-bold text-[#f0f0f0]">Ingredients Anatomy</h3>
             </div>
-            <div className={styles.anatomyList}>
+            <div className="flex flex-col gap-2">
               {dish.ingredients.map((ing, i) => (
-                <div key={i} className={styles.anatomyItem}>
-                  <div className={styles.checkCircle}>
+                <div key={i} className="flex items-center gap-2.5">
+                  <div className="w-5 h-5 rounded-full bg-[rgba(244,140,37,0.15)] border border-[rgba(244,140,37,0.4)] flex items-center justify-center flex-shrink-0">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
-                      <path d="M20 6L9 17l-5-5" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M20 6L9 17l-5-5" stroke="#f48c25" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
-                  <p className={styles.anatomyName}>{ing.name}</p>
-                  <span className={styles.anatomyWeight}>{ing.weight}</span>
+                  <p className="flex-1 text-[11px] text-[#aaa] font-medium">{ing.name}</p>
+                  <span className="text-[10px] font-bold text-[#f48c25]">{ing.weight}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* CTA */}
-          <button className={`btn btn-primary ${styles.ctaBtn}`}>
+          <button className="w-full mt-auto py-3 text-[12px] font-semibold tracking-widest uppercase text-black bg-gradient-to-br from-[#f48c25] to-[#e07010] rounded-lg hover:from-[#ff9d3a] hover:to-[#f48c25] hover:shadow-[0_4px_24px_rgba(244,140,37,0.25)] hover:-translate-y-px transition-all">
             ADD TO DAILY TRACKER
           </button>
         </aside>

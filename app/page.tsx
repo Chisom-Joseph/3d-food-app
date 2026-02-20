@@ -5,17 +5,13 @@ import Navbar from '@/components/Navbar';
 import MenuGallery from '@/components/MenuGallery';
 import NutritionPanel from '@/components/NutritionPanel';
 import { foodItems, mainGalleryItems, getFoodBySlug } from '@/lib/foodData';
-import styles from './page.module.css';
 
-// Dynamically import 3D viewer to avoid SSR issues
 const FoodViewer3D = dynamic(() => import('@/components/FoodViewer3D'), {
   ssr: false,
   loading: () => (
-    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg)' }}>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 16, animation: 'float 2s ease infinite' }}>🍽️</div>
-        <p style={{ color: 'var(--accent)', fontSize: 13, letterSpacing: '0.1em', fontWeight: 600 }}>LOADING 3D ENGINE...</p>
-      </div>
+    <div className="flex-1 flex flex-col items-center justify-center gap-4 bg-[#0a0a0a]">
+      <div className="text-[56px] animate-float">🍽️</div>
+      <p className="text-[13px] font-bold tracking-[0.15em] text-[#f48c25]">LOADING 3D ENGINE...</p>
     </div>
   ),
 });
@@ -27,9 +23,9 @@ export default function Home() {
   const dish = getFoodBySlug(selectedSlug) || foodItems[0];
 
   return (
-    <div className={styles.root}>
+    <div className="flex flex-col h-screen overflow-hidden">
       <Navbar variant="main" />
-      <div className={styles.body}>
+      <div className="flex flex-1 overflow-hidden min-h-0">
         <MenuGallery
           items={mainGalleryItems}
           selectedSlug={selectedSlug}
