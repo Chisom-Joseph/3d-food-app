@@ -1,0 +1,168 @@
+.panel {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 14px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+}
+
+.calories {
+  text-align: center;
+}
+
+.calLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-3);
+  margin-bottom: 4px;
+}
+
+.calValue {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+}
+
+.calNum {
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.calUnit {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 6px;
+  letter-spacing: 0.1em;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+}
+
+.macroRow {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.macroLabels {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.macroG {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.macroL {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+.sectionLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-3);
+}
+
+.ingrHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.viewAll {
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity var(--transition);
+}
+.viewAll:hover { opacity: 0.7; }
+
+.ingrList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ingrItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ingrIcon {
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.ingrInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.ingrName {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ingrSub {
+  font-size: 9px;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ingrWeight {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.addBtn, .shareBtn {
+  width: 100%;
+  font-size: 11px !important;
+  padding: 11px 12px !important;
+}

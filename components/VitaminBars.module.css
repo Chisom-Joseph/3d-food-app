@@ -1,0 +1,68 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.title2 {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.name {
+  font-size: 11px;
+  color: var(--text-2);
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.barTrack {
+  flex: 1;
+  height: 4px;
+  background: var(--surface-3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #ff6b00);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 8px rgba(244,140,37,0.5);
+  animation: grow 0.8s ease forwards;
+  transform-origin: left;
+}
+
+@keyframes grow {
+  from { width: 0 !important; }
+}
+
+.pct {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
