@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { FoodItem } from '@/lib/foodData';
 import MacroCircle from './MacroCircle';
@@ -8,7 +9,10 @@ interface NutritionPanelProps {
 }
 
 export default function NutritionPanel({ dish }: NutritionPanelProps) {
+  const [showModal, setShowModal] = useState(false);
+
   return (
+
     /* On mobile: full-width scrollable. On desktop: fixed-width sidebar */
     <aside className="w-full md:w-[240px] md:flex-shrink-0 flex flex-col gap-3.5 p-4 bg-[var(--color-surface)] md:border-l border-[var(--color-border)] overflow-y-auto transition-colors duration-300">
       {/* Calories */}
@@ -46,7 +50,12 @@ export default function NutritionPanel({ dish }: NutritionPanelProps) {
       {/* Ingredients header */}
       <div className="flex items-center justify-between">
         <p className="text-[9px] font-bold tracking-[0.12em] text-[var(--color-text-3)]">INGREDIENTS</p>
-        <button className="text-[10px] text-[#f48c25] font-semibold cursor-pointer hover:opacity-70 transition-opacity">View All</button>
+        <button 
+          onClick={() => setShowModal(true)} 
+          className="text-[10px] text-[#f48c25] font-semibold cursor-pointer hover:opacity-70 transition-opacity"
+        >
+          View All
+        </button>
       </div>
 
       <div className="flex flex-col gap-2.5">
@@ -82,6 +91,42 @@ export default function NutritionPanel({ dish }: NutritionPanelProps) {
           EXPLORE FULL DETAIL
         </Link>
       </div>
+    {showModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowModal(false)}>
+        <div 
+          className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl w-full max-w-md max-h-[80vh] flex flex-col shadow-2xl"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between p-4 border-b border-[var(--color-border)]">
+            <h2 className="text-[16px] font-bold text-[var(--color-text)] tracking-wide">All Ingredients</h2>
+            <button 
+              onClick={() => setShowModal(false)}
+              className="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--color-surface-2)] text-[var(--color-text-2)] hover:text-[#f48c25] hover:border-[#f48c25] border border-transparent transition-all"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div className="overflow-y-auto p-4 flex flex-col gap-3">
+            {dish.ingredients.map((ing, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-surface-2)] border border-[var(--color-border)]">
+                <span className="w-10 h-10 flex items-center justify-center bg-[var(--color-surface)] border border-[var(--color-border)] rounded-full flex-shrink-0 text-xl">
+                  {ing.icon}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-semibold text-[var(--color-text)] truncate">{ing.name}</p>
+                  <p className="text-[11px] text-[var(--color-text-3)] truncate">{ing.subtitle}</p>
+                </div>
+                <span className="text-[12px] font-bold text-[#f48c25] flex-shrink-0 px-2 py-1 bg-[rgba(244,140,37,0.1)] rounded-md">{ing.weight}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
     </aside>
+
   );
 }
