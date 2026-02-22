@@ -91,7 +91,7 @@ function DishMesh({ dish, exploded, autoSpin }: { dish: FoodItem; exploded: bool
 
   return (
     <group>
-      <mesh position={[0, -1.7, 0]} receiveShadow>
+      {/* <mesh position={[0, -1.7, 0]} receiveShadow>
         <cylinderGeometry args={[2, 2, 0.06, 64]} />
         <meshStandardMaterial color="#c0b8b0" metalness={0.5} roughness={0.3} />
       </mesh>
@@ -102,7 +102,7 @@ function DishMesh({ dish, exploded, autoSpin }: { dish: FoodItem; exploded: bool
       <mesh position={[0, -1.65, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.9, 0.02, 8, 80]} />
         <meshStandardMaterial color={glowColor} emissive={glowColor} emissiveIntensity={1.5} transparent opacity={0.4} />
-      </mesh>
+      </mesh> */}
       <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
         <group ref={meshRef} position={[0, exploded ? 0.4 : 0, 0]}>
           {dish.modelUrl ? (
