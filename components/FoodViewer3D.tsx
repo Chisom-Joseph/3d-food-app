@@ -221,7 +221,7 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
           <Suspense fallback={null}>
             <DishMesh dish={dish} exploded={exploded} autoSpin={autoSpin} />
           </Suspense>
-          <OrbitControls enablePan={false} minDistance={3} maxDistance={8} enableDamping dampingFactor={0.06} />
+          <OrbitControls enablePan={false} minDistance={3} maxDistance={8} maxPolarAngle={Math.PI / 2} enableDamping dampingFactor={0.06} />
         </Canvas>
 
         {/* Annotations */}
