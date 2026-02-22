@@ -135,13 +135,15 @@ function DishMesh({ dish, exploded, autoSpin }: { dish: FoodItem; exploded: bool
 function SceneLights({ dish, isDark }: { dish: FoodItem; isDark: boolean }) {
   return (
     <>
-      {/* More ambient light in light mode so the model doesn't look washed out */}
-      <ambientLight intensity={isDark ? 0.25 : 0.65} color={isDark ? '#ffffff' : '#fff8f0'} />
-      <pointLight position={[4, 6, 4]} intensity={isDark ? 1.8 : 1.2} color={dish.glowColor} castShadow />
-      <pointLight position={[-5, -2, -4]} intensity={isDark ? 0.6 : 0.2} color={isDark ? '#2233aa' : '#8899dd'} />
-      <pointLight position={[0, -3, 5]} intensity={0.4} color={dish.glowColor} />
-      <spotLight position={[0, 8, 2]} angle={0.35} intensity={isDark ? 2.5 : 1.5} castShadow penumbra={0.5} color={dish.glowColor} />
-      <directionalLight position={[-4, 4, -4]} intensity={isDark ? 0.3 : 0.5} color={isDark ? '#4455ff' : '#ffe8cc'} />
+      {/* Significantly increased ambient light to make objects very visible */}
+      <ambientLight intensity={isDark ? 1.5 : 2.5} color={isDark ? '#ffffff' : '#fff8f0'} />
+      <pointLight position={[4, 6, 4]} intensity={isDark ? 6.0 : 5.0} color={dish.glowColor} castShadow />
+      <pointLight position={[-5, -2, -4]} intensity={isDark ? 3.0 : 2.0} color={isDark ? '#6677ff' : '#aaccff'} />
+      <pointLight position={[0, -3, 5]} intensity={3.0} color={dish.glowColor} />
+      <spotLight position={[0, 8, 2]} angle={0.35} intensity={isDark ? 8.0 : 6.0} castShadow penumbra={0.5} color={dish.glowColor} />
+      <directionalLight position={[-4, 4, -4]} intensity={isDark ? 2.0 : 3.0} color={isDark ? '#8899ff' : '#ffe8cc'} />
+      {/* Frontal key light for clear visibility */}
+      <directionalLight position={[0, 2, 6]} intensity={isDark ? 2.5 : 3.5} color="#ffffff" />
     </>
   );
 }
