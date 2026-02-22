@@ -71,7 +71,7 @@ export default function MenuGallery({ items, selectedSlug, onSelect }: MenuGalle
         </button>
       </div>
 
-      <Link href="#" className="block text-center py-3 text-[11px] text-[#f48c25] font-medium border-t border-[var(--color-border)] hover:opacity-70 transition-opacity">
+      <Link href="/" className="block text-center py-3 text-[11px] text-[#f48c25] font-medium border-t border-[var(--color-border)] hover:opacity-70 transition-opacity">
         View all dishes →
       </Link>
     </aside>

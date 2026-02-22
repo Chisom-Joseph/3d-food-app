@@ -168,12 +168,45 @@ function CtrlBtn({ onClick, active, children, label, title }: {
   );
 }
 
+function CameraController({ zoomAction, onZoomComplete, resetViewAction, onResetComplete }: { zoomAction: number, onZoomComplete: () => void, resetViewAction: boolean, onResetComplete: () => void }) {
+  const { camera, controls } = useThree();
+  
+  useEffect(() => {
+    if (zoomAction !== 0) {
+      const scale = zoomAction > 0 ? 0.8 : 1.25;
+      camera.position.multiplyScalar(scale);
+      
+      const dist = camera.position.length();
+      if (dist < 3) camera.position.setLength(3);
+      if (dist > 8) camera.position.setLength(8);
+      
+      if (controls) (controls as any).update();
+      onZoomComplete();
+    }
+  }, [zoomAction, camera, controls, onZoomComplete]);
+
+  useEffect(() => {
+    if (resetViewAction) {
+      camera.position.set(0, 0, 5);
+      if (controls) {
+        (controls as any).target.set(0, 0, 0);
+        (controls as any).update();
+      }
+      onResetComplete();
+    }
+  }, [resetViewAction, camera, controls, onResetComplete]);
+
+  return null;
+}
+
 export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotations, compactMode = false }: FoodViewer3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [exploded, setExploded] = useState(false);
   const [autoSpin, setAutoSpin] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [zoomAction, setZoomAction] = useState<number>(0);
+  const [resetViewAction, setResetViewAction] = useState<boolean>(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -248,7 +281,8 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
           <Suspense fallback={null}>
             <DishMesh dish={dish} exploded={exploded} autoSpin={autoSpin} />
           </Suspense>
-          <OrbitControls enablePan={false} minDistance={3} maxDistance={8} maxPolarAngle={Math.PI / 2} enableDamping dampingFactor={0.06} />
+          <OrbitControls makeDefault enablePan={false} minDistance={3} maxDistance={8} maxPolarAngle={Math.PI / 2} enableDamping dampingFactor={0.06} />
+          <CameraController zoomAction={zoomAction} onZoomComplete={() => setZoomAction(0)} resetViewAction={resetViewAction} onResetComplete={() => setResetViewAction(false)} />
         </Canvas>
 
         {/* Annotations */}
@@ -295,10 +329,10 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
       {/* Controls strip */}
       <div className="flex items-center justify-between px-2 md:px-4 py-1.5 md:py-2 bg-[var(--color-surface)] border-t border-[var(--color-border)] flex-shrink-0 gap-1 md:gap-2 overflow-x-auto transition-colors duration-300" style={{ scrollbarWidth: 'none' }}>
         <div className="flex items-center gap-1 md:gap-1.5 flex-shrink-0">
-          <CtrlBtn title="Zoom In">
+          <CtrlBtn title="Zoom In" onClick={() => setZoomAction(1)}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
           </CtrlBtn>
-          <CtrlBtn title="Zoom Out">
+          <CtrlBtn title="Zoom Out" onClick={() => setZoomAction(-1)}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/><path d="M21 21l-4.35-4.35M8 11h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
           </CtrlBtn>
           <CtrlBtn onClick={() => setAutoSpin(s => !s)} active={autoSpin} label="AUTO SPIN">
@@ -312,7 +346,7 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
               <path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M19.07 4.93l-4.24 4.24M9.17 14.83l-4.24 4.24" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </CtrlBtn> */}
-          <CtrlBtn title="Reset view">
+          <CtrlBtn title="Reset view" onClick={() => setResetViewAction(true)}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
               <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
               <path d="M3 3v5h5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
