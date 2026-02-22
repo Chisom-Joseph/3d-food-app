@@ -43,7 +43,7 @@ export const foodItems: FoodItem[] = [
   {
     slug: 'sushi-platter',
     name: 'Sushi Platter',
-    modelUrl: "/models/food8.glb",
+    modelUrl: "/models/food1.glb",
     nameAccent: 'Platter',
     cuisine: 'Japanese Fusion',
     rating: 4.8,
