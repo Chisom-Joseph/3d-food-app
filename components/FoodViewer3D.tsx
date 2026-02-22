@@ -3,8 +3,16 @@ import React, { useRef, useState, useEffect, Suspense, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Float, MeshDistortMaterial, Sparkles, Stars, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { FoodItem } from '@/lib/foodData';
+import { FoodItem, foodItems } from '@/lib/foodData';
 import { useTheme } from './ThemeProvider';
+
+if (typeof window !== 'undefined') {
+  foodItems.forEach((f) => {
+    if (f.modelUrl) {
+      useGLTF.preload(f.modelUrl);
+    }
+  });
+}
 
 interface FoodViewer3DProps {
   dish: FoodItem;
@@ -91,18 +99,6 @@ function DishMesh({ dish, exploded, autoSpin }: { dish: FoodItem; exploded: bool
 
   return (
     <group>
-      {/* <mesh position={[0, -1.7, 0]} receiveShadow>
-        <cylinderGeometry args={[2, 2, 0.06, 64]} />
-        <meshStandardMaterial color="#c0b8b0" metalness={0.5} roughness={0.3} />
-      </mesh>
-      <mesh ref={ringRef} position={[0, -1.65, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.6, 0.05, 8, 80]} />
-        <meshStandardMaterial color={glowColor} emissive={glowColor} emissiveIntensity={2.5} transparent opacity={0.9} />
-      </mesh>
-      <mesh position={[0, -1.65, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[1.9, 0.02, 8, 80]} />
-        <meshStandardMaterial color={glowColor} emissive={glowColor} emissiveIntensity={1.5} transparent opacity={0.4} />
-      </mesh> */}
       <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
         <group ref={meshRef} position={[0, exploded ? 0.4 : 0, 0]}>
           {dish.modelUrl ? (
@@ -115,10 +111,6 @@ function DishMesh({ dish, exploded, autoSpin }: { dish: FoodItem; exploded: bool
           )}
         </group>
       </Float>
-      {/* <mesh ref={innerRef} position={[0, exploded ? -0.5 : 0, 0]}>
-        <sphereGeometry args={[0.35, 24, 24]} />
-        <meshStandardMaterial color={glowColor} emissive={glowColor} emissiveIntensity={4} transparent opacity={0.7} />
-      </mesh> */}
       {exploded && [
         [1.6, 0.7, 0.2], [-1.5, 0.5, 0.5], [0.4, 1.6, -0.8], [-0.9,-0.4, 1.3], [1.1,-0.8,-1.0],
       ].map(([x, y, z], i) => (
@@ -341,11 +333,6 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
               <path d="M21 3v9h-9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </CtrlBtn>
-          {/* <CtrlBtn onClick={() => setExploded(e => !e)} active={exploded} label="EXPLODE">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2v6M12 16v6M2 12h6M16 12h6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M19.07 4.93l-4.24 4.24M9.17 14.83l-4.24 4.24" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-          </CtrlBtn> */}
           <CtrlBtn title="Reset view" onClick={() => setResetViewAction(true)}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
               <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
