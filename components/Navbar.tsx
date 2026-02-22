@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTheme } from './ThemeProvider';
+import Image from 'next/image';
 
 interface NavbarProps {
   variant?: 'main' | 'detail';
@@ -47,18 +48,7 @@ export default function Navbar({ variant = 'main' }: NavbarProps) {
       <header className="flex items-center gap-3 md:gap-5 px-4 md:px-6 h-[56px] md:h-[60px] bg-[var(--color-surface)] border-b border-[var(--color-border)] flex-shrink-0 relative z-20 transition-colors duration-300">
         {/* Logo */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          <div className="w-7 h-7 md:w-8 md:h-8 bg-[#f48c25] rounded-[6px] flex items-center justify-center flex-shrink-0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <span className="text-sm md:text-base font-bold tracking-widest text-[var(--color-text)] transition-colors duration-300">
-            {variant === 'main' ? (
-              <>GASTRO<span className="text-[#f48c25]">3D</span></>
-            ) : (
-              <>FOOD <span className="text-[#f48c25]">EXPLORER</span></>
-            )}
-          </span>
+          <Image src="/logo.png" alt="Logo" width={40} height={40} />
           {variant === 'detail' && (
             <span className="hidden sm:inline text-[9px] font-semibold tracking-widest text-[#f48c25] bg-[rgba(244,140,37,0.15)] border border-[rgba(244,140,37,0.4)] rounded px-1.5 py-0.5">
               V2.5.4
