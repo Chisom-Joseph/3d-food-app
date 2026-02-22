@@ -255,9 +255,9 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
   }
 
   return (
-    <div ref={containerRef} className="flex-1 flex flex-col min-w-0 min-h-0 w-full h-full" style={isFullscreen ? { backgroundColor: canvasBg } : {}}>
+    <div ref={containerRef} className="flex-1 flex flex-col min-w-0 max-w-full" style={isFullscreen ? { backgroundColor: canvasBg } : {}}>
       {/* Canvas — background controlled by theme */}
-      <div className="flex-1 relative overflow-hidden min-h-0 min-w-0 w-full h-full" style={{ background: canvasBg }}>
+      <div className="flex-1 relative overflow-hidden max-w-full" style={{ background: canvasBg }}>
         <Canvas
           camera={{ position: [0, 0, 5], fov: 45 }}
           shadows
