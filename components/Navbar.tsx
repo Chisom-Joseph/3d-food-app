@@ -6,6 +6,8 @@ import Image from 'next/image';
 
 interface NavbarProps {
   variant?: 'main' | 'detail';
+  searchQuery?: string;
+  onSearchQueryChange?: (val: string) => void;
 }
 
 function SunIcon() {
@@ -36,12 +38,18 @@ const detailLinks = [
   { label: 'Library', href: '#' },
 ];
 
-export default function Navbar({ variant = 'main' }: NavbarProps) {
-  const [searchVal, setSearchVal] = useState('');
+export default function Navbar({ variant = 'main', searchQuery, onSearchQueryChange }: NavbarProps) {
+  const [internalSearch, setInternalSearch] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const isDark = theme === 'dark';
   const links = variant === 'main' ? mainLinks : detailLinks;
+
+  const actualSearch = searchQuery !== undefined ? searchQuery : internalSearch;
+  const handleSearchChange = (val: string) => {
+    if (onSearchQueryChange) onSearchQueryChange(val);
+    setInternalSearch(val);
+  };
 
   return (
     <>
@@ -65,8 +73,8 @@ export default function Navbar({ variant = 'main' }: NavbarProps) {
           <input
             className="w-full pl-9 pr-3 py-2 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-full text-[var(--color-text)] text-[13px] outline-none focus:border-[#f48c25] transition-all placeholder:text-[var(--color-text-3)]"
             placeholder={variant === 'main' ? 'Search Cuisine...' : 'Search ingredients...'}
-            value={searchVal}
-            onChange={(e) => setSearchVal(e.target.value)}
+            value={actualSearch}
+            onChange={(e) => handleSearchChange(e.target.value)}
           />
         </div>
 
@@ -131,6 +139,8 @@ export default function Navbar({ variant = 'main' }: NavbarProps) {
             <input
               className="w-full pl-9 pr-3 py-2 bg-[var(--color-surface-2)] border border-[var(--color-border)] rounded-full text-[var(--color-text)] text-[13px] outline-none focus:border-[#f48c25] transition-all placeholder:text-[var(--color-text-3)]"
               placeholder="Search Cuisine..."
+              value={actualSearch}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
           {/* Nav links */}

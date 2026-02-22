@@ -1,10 +1,10 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/Navbar';
 import MenuGallery from '@/components/MenuGallery';
 import NutritionPanel from '@/components/NutritionPanel';
-import { foodItems, mainGalleryItems, getFoodBySlug } from '@/lib/foodData';
+import { foodItems, getFoodBySlug } from '@/lib/foodData';
 
 const FoodViewer3D = dynamic(() => import('@/components/FoodViewer3D'), {
   ssr: false,
@@ -24,19 +24,37 @@ export default function Home() {
   const [selectedSlug, setSelectedSlug] = useState('sushi-platter');
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [mobileTab, setMobileTab] = useState<'viewer' | 'info'>('viewer');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const dish = getFoodBySlug(selectedSlug) || foodItems[0];
+  const filteredItems = useMemo(() => {
+    if (!searchQuery.trim()) return foodItems;
+    const q = searchQuery.toLowerCase();
+    return foodItems.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.cuisine.toLowerCase().includes(q) ||
+        item.tag.toLowerCase().includes(q)
+    );
+  }, [searchQuery]);
+
+  const dish = useMemo(() => {
+    const found = filteredItems.find(i => i.slug === selectedSlug);
+    if (found) return found;
+    return filteredItems.length > 0 ? filteredItems[0] : foodItems[0];
+  }, [filteredItems, selectedSlug]);
+
+  const activeSlug = dish.slug;
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[var(--color-bg)] transition-colors duration-300">
-      <Navbar variant="main" />
+      <Navbar variant="main" searchQuery={searchQuery} onSearchQueryChange={setSearchQuery} />
 
       {/* ── MOBILE LAYOUT (below md) ── */}
       <div className="flex flex-col flex-1 min-h-0 md:hidden">
         {/* Horizontal dish strip */}
         <div className="flex gap-2 px-3 py-2 overflow-x-auto bg-[var(--color-surface)] border-b border-[var(--color-border)] flex-shrink-0" style={{ scrollbarWidth: 'none' }}>
-          {mainGalleryItems.map((item) => {
-            const active = item.slug === selectedSlug;
+          {filteredItems.map((item) => {
+            const active = item.slug === activeSlug;
             return (
               <button
                 key={item.slug}
@@ -98,8 +116,8 @@ export default function Home() {
       {/* ── DESKTOP LAYOUT (md+) ── */}
       <div className="hidden md:flex flex-1 overflow-hidden min-h-0">
         <MenuGallery
-          items={mainGalleryItems}
-          selectedSlug={selectedSlug}
+          items={filteredItems}
+          selectedSlug={activeSlug}
           onSelect={setSelectedSlug}
         />
         <FoodViewer3D
