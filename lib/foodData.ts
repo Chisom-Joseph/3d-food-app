@@ -36,12 +36,14 @@ export interface FoodItem {
   };
   relatedSlugs: string[];
   shape: 'torus' | 'sphere' | 'octahedron' | 'cylinder' | 'icosahedron';
+  modelUrl?: string; // Optional path to a custom .glb file in /public/models/
 }
 
 export const foodItems: FoodItem[] = [
   {
     slug: 'sushi-platter',
     name: 'Sushi Platter',
+    modelUrl: "/models/cake.glb",
     nameAccent: 'Platter',
     cuisine: 'Japanese Fusion',
     rating: 4.8,
@@ -79,6 +81,7 @@ export const foodItems: FoodItem[] = [
   {
     slug: 'gourmet-burger',
     name: 'Gourmet Burger',
+    modelUrl: "/models/hamburger.glb",
     nameAccent: 'Burger',
     cuisine: 'American Craft',
     rating: 4.6,
@@ -116,6 +119,7 @@ export const foodItems: FoodItem[] = [
   {
     slug: 'med-salad',
     name: 'Med Salad',
+    modelUrl: "/models/cupcake.glb",
     nameAccent: 'Salad',
     cuisine: 'Mediterranean',
     rating: 4.5,
@@ -153,6 +157,7 @@ export const foodItems: FoodItem[] = [
   {
     slug: 'avocado-toast',
     name: 'Artesian Avocado Toast',
+    modelUrl: "/models/fullmeal.glb",
     nameAccent: 'AVOCADO TOAST',
     cuisine: 'Modern Brunch',
     rating: 4.7,
@@ -190,6 +195,7 @@ export const foodItems: FoodItem[] = [
   {
     slug: 'salmon-poke',
     name: 'Salmon Poke',
+    modelUrl: "/models/meal2.glb",
     nameAccent: 'Poke',
     cuisine: 'Hawaiian Fusion',
     rating: 4.9,
@@ -227,6 +233,7 @@ export const foodItems: FoodItem[] = [
   {
     slug: 'quinoa-bowl',
     name: 'Quinoa Bowl',
+    modelUrl: "/models/meal3.glb",
     nameAccent: 'Bowl',
     cuisine: 'Health Forward',
     rating: 4.4,
@@ -264,6 +271,7 @@ export const foodItems: FoodItem[] = [
   {
     slug: 'falafel-wrap',
     name: 'Falafel Wrap',
+    modelUrl: "/models/Pepperoni_pizza.glb",
     nameAccent: 'Wrap',
     cuisine: 'Middle Eastern',
     rating: 4.5,

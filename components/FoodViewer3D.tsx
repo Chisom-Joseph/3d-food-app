@@ -1,7 +1,7 @@
 'use client';
-import { useRef, useState, useEffect, Suspense } from 'react';
+import React, { useRef, useState, useEffect, Suspense, useMemo } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Float, MeshDistortMaterial, Sparkles, Stars } from '@react-three/drei';
+import { OrbitControls, Float, MeshDistortMaterial, Sparkles, Stars, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { FoodItem } from '@/lib/foodData';
 import { useTheme } from './ThemeProvider';
@@ -25,8 +25,45 @@ function CanvasBackground({ color }: { color: string }) {
   return null;
 }
 
+/* Loads a custom .glb scan and auto-scales/centers it to fit the generic viewer space */
+function CustomGltfModel({ url }: { url: string }) {
+  const { scene } = useGLTF(url);
+  
+  const copiedScene = useMemo(() => {
+    // Clone the scene so we don't mutate the cached singleton from useGLTF
+    const clone = scene.clone();
+    
+    // Compute bounding box to find the object's center and size
+    const box = new THREE.Box3().setFromObject(clone);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    
+    // Center the model relative to its own bounding box
+    clone.position.x = -center.x;
+    clone.position.y = -center.y;
+    clone.position.z = -center.z;
+    
+    // Scale so its max dimension is approximately 2.2 units (which fits nicely in our view)
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = 2.2 / maxDim;
+    clone.scale.set(scale, scale, scale);
+
+    // Enable shadows for all meshes inside the GLTF
+    clone.traverse((node) => {
+      if ((node as THREE.Mesh).isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+    
+    return clone;
+  }, [scene]);
+
+  return <primitive object={copiedScene} />;
+}
+
 function DishMesh({ dish, exploded, autoSpin }: { dish: FoodItem; exploded: boolean; autoSpin: boolean }) {
-  const meshRef = useRef<THREE.Mesh>(null!);
+  const meshRef = useRef<THREE.Group>(null!);
   const ringRef = useRef<THREE.Mesh>(null!);
   const innerRef = useRef<THREE.Mesh>(null!);
 
@@ -67,15 +104,21 @@ function DishMesh({ dish, exploded, autoSpin }: { dish: FoodItem; exploded: bool
         <meshStandardMaterial color={glowColor} emissive={glowColor} emissiveIntensity={1.5} transparent opacity={0.4} />
       </mesh>
       <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
-        <mesh ref={meshRef} castShadow position={[0, exploded ? 0.4 : 0, 0]}>
-          {shapeGeometry()}
-          <MeshDistortMaterial color={mainColor} metalness={0.25} roughness={0.15} distort={exploded ? 0.55 : 0.12} speed={1.8} />
-        </mesh>
+        <group ref={meshRef} position={[0, exploded ? 0.4 : 0, 0]}>
+          {dish.modelUrl ? (
+            <CustomGltfModel url={dish.modelUrl} />
+          ) : (
+            <mesh castShadow>
+              {shapeGeometry()}
+              <MeshDistortMaterial color={mainColor} metalness={0.25} roughness={0.15} distort={exploded ? 0.55 : 0.12} speed={1.8} />
+            </mesh>
+          )}
+        </group>
       </Float>
-      <mesh ref={innerRef} position={[0, exploded ? -0.5 : 0, 0]}>
+      {/* <mesh ref={innerRef} position={[0, exploded ? -0.5 : 0, 0]}>
         <sphereGeometry args={[0.35, 24, 24]} />
         <meshStandardMaterial color={glowColor} emissive={glowColor} emissiveIntensity={4} transparent opacity={0.7} />
-      </mesh>
+      </mesh> */}
       {exploded && [
         [1.6, 0.7, 0.2], [-1.5, 0.5, 0.5], [0.4, 1.6, -0.8], [-0.9,-0.4, 1.3], [1.1,-0.8,-1.0],
       ].map(([x, y, z], i) => (
