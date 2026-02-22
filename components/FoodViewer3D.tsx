@@ -169,11 +169,38 @@ function CtrlBtn({ onClick, active, children, label, title }: {
 }
 
 export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotations, compactMode = false }: FoodViewer3DProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const [exploded, setExploded] = useState(false);
   const [autoSpin, setAutoSpin] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
+  const toggleFullscreen = async () => {
+    if (!containerRef.current) return;
+    if (!document.fullscreenElement) {
+      try {
+        await containerRef.current.requestFullscreen();
+      } catch (err) {
+        console.error("Error attempting to enable fullscreen:", err);
+      }
+    } else {
+      if (document.exitFullscreen) {
+        await document.exitFullscreen();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+      // Force a window resize event to re-measure to fix the 3D canvas not shrinking when exiting fullscreen
+      setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
 
   // Theme-specific canvas colors
   const canvasBg    = isDark ? '#0a0a0a' : '#f0e8de';
@@ -187,7 +214,7 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
 
   if (!mounted) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-4" style={{ background: canvasBg }}>
+      <div className="flex-1 flex flex-col items-center justify-center gap-4 w-full h-full" style={{ background: canvasBg }}>
         <div className="text-[56px] animate-float">🍽️</div>
         <p className="text-[13px] font-bold tracking-[0.15em] text-[#f48c25]">LOADING 3D ENGINE...</p>
       </div>
@@ -195,9 +222,9 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
   }
 
   return (
-    <div className="flex-1 flex flex-col min-w-0">
+    <div ref={containerRef} className="flex-1 flex flex-col min-w-0 min-h-0 w-full h-full" style={isFullscreen ? { backgroundColor: canvasBg } : {}}>
       {/* Canvas — background controlled by theme */}
-      <div className="flex-1 relative overflow-hidden" style={{ background: canvasBg }}>
+      <div className="flex-1 relative overflow-hidden min-h-0 min-w-0 w-full h-full" style={{ background: canvasBg }}>
         <Canvas
           camera={{ position: [0, 0, 5], fov: 45 }}
           shadows
@@ -299,9 +326,13 @@ export default function FoodViewer3D({ dish, showAnnotations, onToggleAnnotation
               <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
           </CtrlBtn>
-          <CtrlBtn title="Fullscreen">
+          <CtrlBtn title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"} onClick={toggleFullscreen} active={isFullscreen}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-              <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              {isFullscreen ? (
+                <path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              ) : (
+                <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              )}
             </svg>
           </CtrlBtn>
         </div>
