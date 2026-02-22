@@ -41,6 +41,44 @@ export interface FoodItem {
 
 export const foodItems: FoodItem[] = [
   {
+  slug: 'mediterranean-chicken-bowl',
+  name: 'Mediterranean Chicken',
+  modelUrl: "/models/food8.glb",
+  nameAccent: 'Bowl',
+  cuisine: 'Mediterranean',
+  rating: 4.7,
+  reviews: 8,
+  calories: 645,
+  price: '$22.49',
+  prepTime: '25 Min prep',
+  tag: '3D NOW',
+  color: '#b55e3c',
+  glowColor: '#e07a3f',
+  macros: {
+    protein: { g: 46, pct: 82 },
+    carbs: { g: 52, pct: 41 },
+    fats: { g: 24, pct: 32 },
+  },
+  vitamins: [
+    { name: 'Vitamin A', pct: 38 },
+    { name: 'Vitamin C', pct: 46 },
+    { name: 'Iron', pct: 22 },
+    { name: 'Potassium', pct: 34 },
+  ],
+  ingredients: [
+    { name: 'Grilled Herb Chicken', subtitle: 'Free-range • Olive oil marinated', weight: '140g', icon: '🍗' },
+    { name: 'Lemon Turmeric Rice', subtitle: 'Long-grain • Fluffy texture', weight: '130g', icon: '🍚' },
+    { name: 'Cucumber Tomato Salad', subtitle: 'Fresh chopped • Light vinaigrette', weight: '90g', icon: '🥗' },
+    { name: 'Tzatziki Sauce', subtitle: 'Greek yogurt • Garlic infused', weight: '40g', icon: '🥣' },
+  ],
+  activeIngredient: {
+    name: 'Grilled Herb Chicken',
+    description: 'Lean free-range chicken breast marinated in extra virgin olive oil, garlic, and Mediterranean herbs, delivering high-quality protein for muscle recovery and sustained energy.',
+  },
+  relatedSlugs: ['gourmet-burger', 'avocado-toast', 'quinoa-bowl', 'salmon-poke'],
+  shape: 'torus',
+},
+  {
     slug: 'sushi-platter',
     name: 'Sushi Platter',
     modelUrl: "/models/food1.glb",
