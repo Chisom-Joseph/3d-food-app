@@ -68,16 +68,10 @@ export default function NutritionPanel({ dish }: NutritionPanelProps) {
 
       {/* CTAs */}
       <div className="flex flex-col gap-2 pb-2">
-        <button className="w-full flex items-center justify-center gap-2 px-3 py-[11px] text-[11px] font-semibold tracking-widest uppercase text-black bg-gradient-to-br from-[#f48c25] to-[#e07010] rounded-lg hover:from-[#ff9d3a] hover:to-[#f48c25] hover:shadow-[0_4px_24px_rgba(244,140,37,0.25)] hover:-translate-y-px transition-all">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M3 6h18M16 10a4 4 0 01-8 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          ADD TO BASKET — {dish.price}
-        </button>
+
         <Link
           href={`/dish/${dish.slug}`}
-          className="w-full flex items-center justify-center gap-2 px-3 py-[11px] text-[11px] font-semibold tracking-widest uppercase text-[var(--color-text-2)] bg-transparent border border-[var(--color-border)] rounded-lg hover:border-[#f48c25] hover:text-[#f48c25] hover:bg-[rgba(244,140,37,0.08)] transition-all"
+          className="w-full flex items-center justify-center gap-2 px-3 py-[11px] text-[11px] font-semibold tracking-widest uppercase text-[#f48c25] bg-[rgba(244,140,37,0.08)] border border-[#f48c25] rounded-lg hover:bg-[rgba(244,140,37,0.15)] hover:border-[#ff9d3a] hover:text-[#ff9d3a] hover:shadow-[0_4px_16px_rgba(244,140,37,0.2)] hover:-translate-y-px transition-all"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <circle cx="18" cy="5" r="3" stroke="currentColor" strokeWidth="2"/>
